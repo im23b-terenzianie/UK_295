@@ -1,0 +1,22 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/im23b-terenzianie/UK_295.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/im23b-terenzianie/UK_295/issues"
+  },
+  "homepage": "https://github.com/im23b-terenzianie/UK_295#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
