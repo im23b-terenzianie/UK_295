@@ -1,0 +1,323 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Bibliothek API",
+    "description": "API Dokumentation für das Bibliothek-Projekt. Hier werden alle Endpunkte für Books und Lends dokumentiert.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "Book",
+      "description": "Endpunkte zur Verwaltung von Büchern"
+    },
+    {
+      "name": "Lend",
+      "description": "Endpunkte zur Verwaltung von Ausleihen"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "tags": ["Book"],
+        "summary": "Gibt alle Bücher als JSON zurück",
+        "responses": {
+          "200": {
+            "description": "Erfolgreiche Antwort mit dem Array aller Bücher",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Book"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Book"],
+        "summary": "Erstellt ein neues Buch",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Buch Objekt, das hinzugefügt werden soll",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Buch wurde erstellt",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Fehlende oder ungültige Daten"
+          }
+        }
+      }
+    },
+    "/books/{isbn}": {
+      "get": {
+        "tags": ["Book"],
+        "summary": "Gibt alle Informationen zu einem Buch anhand der ISBN zurück",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Die ISBN des Buches"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Buch gefunden",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "404": {
+            "description": "Buch nicht gefunden"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Book"],
+        "summary": "Überschreibt ein bestehendes Buch",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Die ISBN des Buches, das aktualisiert werden soll"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Aktualisierte Buchinformationen",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Buch wurde aktualisiert",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Ungültige Eingabedaten"
+          },
+          "404": {
+            "description": "Buch nicht gefunden"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Book"],
+        "summary": "Ändert die Daten eines Buches teilweise",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Die ISBN des Buches, das aktualisiert werden soll"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Teildaten des Buches",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Buch wurde aktualisiert",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Ungültige Eingabedaten"
+          },
+          "404": {
+            "description": "Buch nicht gefunden"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Book"],
+        "summary": "Löscht ein Buch",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Die ISBN des Buches, das gelöscht werden soll"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Buch wurde gelöscht"
+          },
+          "404": {
+            "description": "Buch nicht gefunden"
+          }
+        }
+      }
+    },
+    "/lends": {
+      "get": {
+        "tags": ["Lend"],
+        "summary": "Gibt alle Ausleihen als JSON zurück",
+        "responses": {
+          "200": {
+            "description": "Erfolgreiche Antwort mit dem Array aller Ausleihen",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Lend"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Lend"],
+        "summary": "Leiht ein neues Buch aus und erstellt einen Lend-Eintrag",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Daten des neuen Ausleihvorgangs",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Lend"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ausleihe wurde erstellt",
+            "schema": {
+              "$ref": "#/definitions/Lend"
+            }
+          },
+          "400": {
+            "description": "Ungültige Eingabedaten"
+          }
+        }
+      }
+    },
+    "/lends/{id}": {
+      "get": {
+        "tags": ["Lend"],
+        "summary": "Gibt eine bestimmte Ausleihe zurück",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Die ID der Ausleihe"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ausleihe gefunden",
+            "schema": {
+              "$ref": "#/definitions/Lend"
+            }
+          },
+          "404": {
+            "description": "Ausleihe nicht gefunden"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Lend"],
+        "summary": "Bringt ein Buch zurück (löscht einen Lend-Eintrag)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Die ID der Ausleihe, die gelöscht werden soll"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ausleihe wurde gelöscht"
+          },
+          "404": {
+            "description": "Ausleihe nicht gefunden"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Book": {
+      "type": "object",
+      "properties": {
+        "isbn": {
+          "type": "string",
+          "example": "9783161484100"
+        },
+        "title": {
+          "type": "string",
+          "example": "Der Herr der Ringe"
+        },
+        "author": {
+          "type": "string",
+          "example": "J.R.R. Tolkien"
+        }
+      },
+      "required": ["isbn", "title", "author"]
+    },
+    "Lend": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "customer_id": {
+          "type": "string",
+          "example": "K1001"
+        },
+        "isbn": {
+          "type": "string",
+          "example": "9783161484100"
+        },
+        "borrowed_at": {
+          "type": "string",
+          "example": "2025-04-15T12:00:00Z"
+        },
+        "returned_at": {
+          "type": "string",
+          "example": null
+        }
+      },
+      "required": ["customer_id", "isbn", "borrowed_at"]
+    }
+  }
+}

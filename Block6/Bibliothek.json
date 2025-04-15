@@ -1,0 +1,289 @@
+{
+    "info": {
+      "_postman_id": "b65e6fa7-1234-4321-abcd-0123456789ab",
+      "name": "Bibliothek API Tests",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "GET - Alle Bücher (Schönwettertest)",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/books",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "books"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                "pm.test(\"Response contains books array\", function () {",
+                "    var jsonData = pm.response.json();",
+                "    pm.expect(jsonData).to.be.an('array');",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "POST - Buch erstellen (schönwetter)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"isbn\": \"9781234567890\",\n    \"title\": \"Ein neues Buch\",\n    \"author\": \"Max Mustermann\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/books",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "books"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 201\", function () {",
+                "    pm.response.to.have.status(201);",
+                "});",
+                "",
+                "pm.test(\"Response has correct title\", function () {",
+                "    var jsonData = pm.response.json();",
+                "    pm.expect(jsonData.title).to.eql(\"Ein neues Buch\");",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "POST - Buch ohne Titel darf nicht erstellt werden",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"isbn\": \"9781111111111\",\n    \"title\": \"\",\n    \"author\": \"Autor Ohne Titel\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/books",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "books"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 400\", function () {",
+                "    pm.response.to.have.status(400);",
+                "});",
+                "",
+                "pm.test(\"Error message is correct\", function () {",
+                "    var jsonData = pm.response.json();",
+                "    pm.expect(jsonData.message).to.eql(\"Buch ohne Titel kann nicht erstellt werden\");",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "POST - Lend erstellen (schönwetter)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"customer_id\": \"K2001\",\n    \"isbn\": \"9783825530176\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/lends",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "lends"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 201\", function () {",
+                "    pm.response.to.have.status(201);",
+                "});",
+                "",
+                "pm.test(\"Response contains lend data\", function () {",
+                "    var jsonData = pm.response.json();",
+                "    pm.expect(jsonData).to.have.property('id');",
+                "    pm.expect(jsonData).to.have.property('customer_id', \"K2001\");",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "POST - Lend kann nicht erfasst werden, wenn Buch nicht existiert",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"customer_id\": \"K3001\",\n    \"isbn\": \"9780000000000\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/lends",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "lends"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 400\", function () {",
+                "    pm.response.to.have.status(400);",
+                "});",
+                "",
+                "pm.test(\"Error message for non-existing book\", function () {",
+                "    var jsonData = pm.response.json();",
+                "    pm.expect(jsonData.message).to.eql(\"Lend kann nicht erfasst werden, wenn das Buch nicht existiert\");",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "POST - Dasselbe Buch kann nicht mehrfach gleichzeitig ausgeliehen werden",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"customer_id\": \"K4001\",\n    \"isbn\": \"9783161484100\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/lends",
+            "protocol": "http",
+            "host": [
+              "localhost"
+            ],
+            "port": "3000",
+            "path": [
+              "lends"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "// Der erste Request leiht das Buch erfolgreich aus.",
+                "pm.test(\"Erster Lend sollte 201 sein\", function () {",
+                "    pm.response.to.have.status(201);",
+                "});",
+                "",
+                "// Sende danach einen weiteren Request für dasselbe Buch.",
+                "if (pm.response.code === 201) {",
+                "    // Führe einen zweiten Request aus",
+                "    var secondRequest = {",
+                "        url: 'http://localhost:3000/lends',",
+                "        method: 'POST',",
+                "        header: [{ key: 'Content-Type', value: 'application/json' }],",
+                "        body: { mode: 'raw', raw: JSON.stringify({ customer_id: 'K4002', isbn: '9783161484100' }) }",
+                "    };",
+                "    pm.sendRequest(secondRequest, function (err, res) {",
+                "        pm.test(\"Zweiter Lend sollte 400 sein\", function () {",
+                "            pm.expect(res.code).to.eql(400);",
+                "        });",
+                "    });",
+                "} "
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      }
+    ]
+  }
