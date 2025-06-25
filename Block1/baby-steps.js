@@ -6,3 +6,4 @@ while (process.argv.length > i) {
     i++
 };
 console.log(total)
+
